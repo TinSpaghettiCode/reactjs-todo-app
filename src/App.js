@@ -46,6 +46,13 @@ function App() {
     );
   }, []);
 
+  const onDeleteBtnClick = useCallback(
+    (id) => {
+      setTodoList(todoList.filter((todo) => todo.id !== id));
+    },
+    [todoList]
+  );
+
   return (
     <>
       <h3>Danh sách cần làm</h3>
@@ -65,7 +72,11 @@ function App() {
         value={textInput}
         onChange={onTextInputChange}
       ></Textfield>
-      <TodoList todoList={todoList} onCheckBtnClick={onCheckBtnClick} />
+      <TodoList
+        todoList={todoList}
+        onCheckBtnClick={onCheckBtnClick}
+        onDeleteBtnClick={onDeleteBtnClick}
+      />
     </>
   );
 }
