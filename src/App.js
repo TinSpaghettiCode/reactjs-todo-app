@@ -25,16 +25,38 @@ function App() {
     setTextInput(e.target.value);
   }, []);
 
+  const removeAccents = (str) => {
+    return str
+      .normalize('NFD')
+      .replace(/đ/g, 'd')
+      .replace(/Đ/g, 'D')
+      .replace(/[\u0300-\u036f]/g, '')
+      .toLowerCase()
+      .replace(/\s/g, '');
+  };
+
   const onAddBtnClick = useCallback(
     (e) => {
-      // them text input vao danh sach todoList
-      setTodoList([
-        { id: v4(), name: textInput, isCompleted: false },
-        ...todoList,
-      ]);
+      // them textInput vao danh sach todoList
+      const isTodoExist = todoList.some(
+        (todo) => removeAccents(todo.name) === removeAccents(textInput)
+      );
+      if (isTodoExist) {
+        // Nếu công việc đã tồn tại, hiển thị thông báo cho người dùng
+        alert('Công việc này đã tồn tại trong danh sách.');
+      } else {
+        // Nếu công việc chưa tồn tại, thêm nó vào danh sách
+        setTodoList([
+          { id: v4(), name: textInput, isCompleted: false },
+          ...todoList,
+        ]);
 
-      setTextInput('');
+        setTextInput('');
+      }
+
+      console.log('🚀 ~ file: App.js:27 ~ App ~ todoList:', todoList);
     },
+
     [textInput, todoList]
   );
 
