@@ -2,6 +2,7 @@ import React from 'react';
 import Button from '@atlaskit/button';
 import styled, { css } from 'styled-components';
 import CheckIcon from '@atlaskit/icon/glyph/check';
+import TrashIcon from '@atlaskit/icon/glyph/trash';
 
 const ButtonStyled = styled(Button)`
   margin-top: 5px;
@@ -38,15 +39,22 @@ const ButtonStyled = styled(Button)`
   }
 `;
 
-export default function Todo({ todo, onCheckBtnClick }) {
+export default function Todo({ todo, onCheckBtnClick, onDeleteBtnClick }) {
   return (
     <ButtonStyled
       isCompleted={todo.isCompleted}
       shouldFitContainer
       iconAfter={
-        !todo.isCompleted && (
+        !todo.isCompleted ? (
           <span className="check-icon" onClick={() => onCheckBtnClick(todo.id)}>
             <CheckIcon primaryColor="#0A7B2D" />
+          </span>
+        ) : (
+          <span
+            className="trash-icon"
+            onClick={() => onDeleteBtnClick(todo.id)}
+          >
+            <TrashIcon primaryColor="#C8102E" />
           </span>
         )
       }

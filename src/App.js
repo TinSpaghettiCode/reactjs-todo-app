@@ -11,19 +11,11 @@ function App() {
   const [todoList, setTodoList] = useState([]); // array
   const [textInput, setTextInput] = useState(''); // string
 
-  // useEffect(() => {
-  //   if (localStorage.getItem(TODO_APP_STORAGE_KEY)) {
-  //     setTodoList(JSON.parse(localStorage.getItem(TODO_APP_STORAGE_KEY)));
-  //   }
-  // }, []);
-
-  // useEffect(() => {
-  //   localStorage.setItem(TODO_APP_STORAGE_KEY, JSON.stringify(todoList));
-  // }, [todoList]);
-
   useEffect(() => {
-    console.log('🚀 ~ file: App.js:37 ~ App ~ todoList', todoList);
-  }, [todoList]);
+    if (localStorage.getItem(TODO_APP_STORAGE_KEY)) {
+      setTodoList(JSON.parse(localStorage.getItem(TODO_APP_STORAGE_KEY)));
+    }
+  }, []);
 
   const onTextInputChange = useCallback((e) => {
     setTextInput(e.target.value);
@@ -72,6 +64,10 @@ function App() {
     );
   }, []);
 
+  const onDeleteBtnClick = useCallback((id) => {
+    setTodoList((prev) => prev.filter((todo) => todo.id !== id));
+  }, []);
+
   return (
     <>
       <h3>Danh sách các việc cần làm</h3>
@@ -83,7 +79,6 @@ function App() {
             isDisabled={!textInput}
             appearance="primary"
             onClick={onAddBtnClick}
-            style={{ marginRight: '2px' }}
           >
             Thêm
           </Button>
@@ -93,7 +88,11 @@ function App() {
         onChange={onTextInputChange}
       ></Textfield>
 
-      <TodoList todoList={todoList} onCheckBtnClick={onCheckBtnClick} />
+      <TodoList
+        todoList={todoList}
+        onCheckBtnClick={onCheckBtnClick}
+        onDeleteBtnClick={onDeleteBtnClick}
+      />
     </>
   );
 }
