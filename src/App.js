@@ -1,24 +1,28 @@
+import React, { useCallback, useState, useEffect } from 'react';
 import TodoList from './components/TodoList';
 import Textfield from '@atlaskit/textfield';
 import Button from '@atlaskit/button';
-import { useCallback, useState, useEffect } from 'react';
 import { v4 } from 'uuid';
 
 const TODO_APP_STORAGE_KEY = 'TODO_APP';
 
 function App() {
-  const [todoList, setTodoList] = useState([]);
-  const [textInput, setTextInput] = useState('');
+  // state, props
+  const [todoList, setTodoList] = useState([]); // array
+  const [textInput, setTextInput] = useState(''); // string
+
+  // useEffect(() => {
+  //   if (localStorage.getItem(TODO_APP_STORAGE_KEY)) {
+  //     setTodoList(JSON.parse(localStorage.getItem(TODO_APP_STORAGE_KEY)));
+  //   }
+  // }, []);
+
+  // useEffect(() => {
+  //   localStorage.setItem(TODO_APP_STORAGE_KEY, JSON.stringify(todoList));
+  // }, [todoList]);
 
   useEffect(() => {
-    const storagedTodoList = localStorage.getItem(TODO_APP_STORAGE_KEY);
-    if (storagedTodoList) {
-      setTodoList(JSON.parse(storagedTodoList));
-    }
-  }, []);
-
-  useEffect(() => {
-    localStorage.setItem(TODO_APP_STORAGE_KEY, JSON.stringify(todoList));
+    console.log('🚀 ~ file: App.js:37 ~ App ~ todoList', todoList);
   }, [todoList]);
 
   const onTextInputChange = useCallback((e) => {
@@ -61,23 +65,16 @@ function App() {
   );
 
   const onCheckBtnClick = useCallback((id) => {
-    setTodoList((prevState) =>
-      prevState.map((todo) =>
+    setTodoList((prev) =>
+      prev.map((todo) =>
         todo.id === id ? { ...todo, isCompleted: true } : todo
       )
     );
   }, []);
 
-  const onDeleteBtnClick = useCallback(
-    (id) => {
-      setTodoList(todoList.filter((todo) => todo.id !== id));
-    },
-    [todoList]
-  );
-
   return (
     <>
-      <h3>Danh sách cần làm</h3>
+      <h3>Danh sách các việc cần làm</h3>
       <Textfield
         name="add-todo"
         placeholder="Thêm việc cần làm..."
@@ -86,6 +83,7 @@ function App() {
             isDisabled={!textInput}
             appearance="primary"
             onClick={onAddBtnClick}
+            style={{ marginRight: '2px' }}
           >
             Thêm
           </Button>
@@ -94,11 +92,8 @@ function App() {
         value={textInput}
         onChange={onTextInputChange}
       ></Textfield>
-      <TodoList
-        todoList={todoList}
-        onCheckBtnClick={onCheckBtnClick}
-        onDeleteBtnClick={onDeleteBtnClick}
-      />
+
+      <TodoList todoList={todoList} onCheckBtnClick={onCheckBtnClick} />
     </>
   );
 }
